@@ -13,6 +13,8 @@ def reward_function(params):
     x_coord = params['x']
     y_coord = params['y']
     
+    reward = speed
+
     SPEEDING_THRESHOLD = 2.0
     STEERING_THRESHOLD = 15.0
     STEPS_THRESHOLD = 300.0 
