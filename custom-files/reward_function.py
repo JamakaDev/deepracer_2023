@@ -17,21 +17,19 @@ def reward_function(params):
 
     SPEEDING_THRESHOLD = 2.0
     STEERING_THRESHOLD = 15.0
-    STEPS_THRESHOLD = 300.0 
+    STEPS_THRESHOLD = 250.0 
     PROGRESS_FACTOR = 1.25
-    
-    
-    # Attempting to reward higher speeds when going straight
-    if steering_angle == 0 and speed > SPEEDING_THRESHOLD:
-        reward *= speed
-    
+        
+
     # Reduce reward if the car is steering too much
     if steering > STEERING_THRESHOLD:
-        reward *= 0.9
+        reward *= 0.8
     
     # Reduce reward if the car is going slow
     if speed < SPEEDING_THRESHOLD:
-        reward *= 0.9
+        reward *= 0.8
+    else:
+	reward *= speed
     
     # Penalize if the car goes off-track
     if not all_wheels_on_track:
