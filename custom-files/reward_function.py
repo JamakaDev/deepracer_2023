@@ -57,3 +57,4 @@ def reward_function(params):
         reward += (progress - (steps / STEPS_THRESHOLD)) * PROGRESS_FACTOR
     
     return float(reward)
+
