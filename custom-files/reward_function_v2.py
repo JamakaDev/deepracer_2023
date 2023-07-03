@@ -1,5 +1,4 @@
-#Bytesize-Base-v1 - Successful 20.926 sec lap
-
+#Bytesize-Jon-v1-070323 - Successful 25.536 sec lap down from 20.926
 def reward_function(params):
     
     all_wheels_on_track = params['all_wheels_on_track']
@@ -15,20 +14,24 @@ def reward_function(params):
     x_coord = params['x']
     y_coord = params['y']
     
+    # Max steps b4 episode is terminated (avoids running indefinitely)
     SPEEDING_THRESHOLD = 2.0
     STEERING_THRESHOLD = 15.0
-    STEPS_THRESHOLD = 300 
-    PROGRESS_FACTOR = 1.2
+    STEPS_THRESHOLD = 300.0 
+    PROGRESS_FACTOR = 1.25
     
     # Attempting to reward higher speeds
-    reward = speed
+    if speed > SPEEDING_THRESHOLD:
+        reward = speed 
+    else:
+        speed * 0.5
     
     # Reduce reward if the car is steering too much
     if steering > STEERING_THRESHOLD:
         reward *= 0.9
-
+    
     # Penalize if the car goes off-track
-    if not all_wheels_on_track and speed < SPEEDING_THRESHOLD:
+    if not all_wheels_on_track and speed < 2:
         reward = 1e-3
     else:
         # Get direction of next waypoint
@@ -51,4 +54,3 @@ def reward_function(params):
         reward += (progress - (steps / STEPS_THRESHOLD)) * PROGRESS_FACTOR
     
     return float(reward)
-
