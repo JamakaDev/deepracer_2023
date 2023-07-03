@@ -52,7 +52,7 @@ def reward_function(params):
         if speed >= SPEEDING_THRESHOLD:
             reward *= 1.5
 
-        if -5.0 <= steering_angle <= 5.0 and speed >= SPEEDING_THRESHOLD:
+        if (-5.0 <= steering_angle <= 5.0) and (speed >= SPEEDING_THRESHOLD) and (distance_from_center <= track_width * .25):
             reward *= 2
 
         
