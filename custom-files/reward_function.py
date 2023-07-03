@@ -1,13 +1,13 @@
 #Bytesize-Base-v1 - Successful 20.926 sec lap
-
+import math
 def reward_function(params):
     
     all_wheels_on_track = params['all_wheels_on_track']
     car_direction = params['heading']
+    closest_waypoints = params['closest_waypoints']
     distance_from_center = params['distance_from_center']
     progress = params['progress']
     speed = params['speed']
-    steering = abs(params['steering_angle'])
     steering_angle = params['steering_angle']
     steps = params['steps']
     track_width = params['track_width']
@@ -15,33 +15,33 @@ def reward_function(params):
     x_coord = params['x']
     y_coord = params['y']
     
+    DIRECTION_THRESHOLD = 10.0
     SPEEDING_THRESHOLD = 2.0
-    STEERING_THRESHOLD = 15.0
     STEPS_THRESHOLD = 300 
     PROGRESS_FACTOR = 1.2
     
     # Attempting to reward higher speeds
     reward = speed
     
-    # Reduce reward if the car is steering too much
-    if steering > STEERING_THRESHOLD:
-        reward *= 0.9
 
     # Penalize if the car goes off-track
     if not all_wheels_on_track and speed < SPEEDING_THRESHOLD:
         reward = 1e-3
     else:
         # Get direction of next waypoint
-        next_index = int((progress / 100) * (len(waypoints) - 1))
-        next_coord = waypoints[next_index]
-        track_direction = next_coord[0] - x_coord, next_coord[1] - y_coord
-        
-        # Get angle between the car direction and the track direction
-        direction_diff_x = abs(track_direction[0] - car_direction)
-        direction_diff_y = abs(track_direction[1] - car_direction)
-        
-        # Penalize if the car deviates from the track direction
-        if direction_diff_x > 1.0 or direction_diff_y > 1.0:
+        prev_waypoint = waypoints[closest_waypoints[0]]
+        next_waypoint = waypoints[closest_waypoints[1]]
+
+        # Calculate the direction in radius, arctan2(dy, dx), the result is (-pi, pi) in radians
+        track_direction = math.degrees(math.atan2(next_waypoint[1] - prev_waypoint[1], next_waypoint[0] - prev_waypoint[0]))
+
+        # Calculate the difference between the track direction and the heading direction of the car
+        direction_diff = abs(track_direction - car_direction)
+        if direction_diff > 180:
+            direction_diff -= 360
+
+        # Penalize the reward if the difference is too large
+        if direction_diff > DIRECTION_THRESHOLD:
             reward *= 0.5
         
         # Reward if the car is closer to the center of the track
