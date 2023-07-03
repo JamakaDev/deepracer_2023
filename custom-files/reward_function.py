@@ -14,18 +14,17 @@ def reward_function(params):
     waypoints = params['waypoints']
     x_coord = params['x']
     y_coord = params['y']
+    reward = speed
+    
     
     DIRECTION_THRESHOLD = 10.0
     SPEEDING_THRESHOLD = 2.0
     STEPS_THRESHOLD = 300 
     PROGRESS_FACTOR = 1.2
-    
-    # Attempting to reward higher speeds
-    reward = speed
-    
+        
 
     # Penalize if the car goes off-track
-    if not all_wheels_on_track and speed < SPEEDING_THRESHOLD:
+    if not all_wheels_on_track:
         reward = 1e-3
     else:
         # Get direction of next waypoint
@@ -49,6 +48,14 @@ def reward_function(params):
         
         # Reward additional progress
         reward += (progress - (steps / STEPS_THRESHOLD)) * PROGRESS_FACTOR
+
+        if speed >= SPEEDING_THRESHOLD:
+            reward *= 1.5
+
+        if -5.0 <= steering_angle <= 5.0 and speed >= SPEEDING_THRESHOLD:
+            reward *= 2
+
+        
     
     return float(reward)
 
