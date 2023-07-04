@@ -18,8 +18,8 @@ def reward_function(params):
     reward = speed
     
     
-    DIRECTION_THRESHOLD = 10.0
-    SPEEDING_THRESHOLD = 2.25
+    DIRECTION_THRESHOLD = 8.0
+    SPEEDING_THRESHOLD = 3.0
     STEPS_THRESHOLD = 250 
     PROGRESS_FACTOR = 1.25
         
@@ -45,23 +45,15 @@ def reward_function(params):
             reward *= 0.5
         
         # Reward if the car is closer to the center of the track
-        reward += (1 - (distance_from_center / (track_width / 2))) * 0.1
+        reward += (1 - (distance_from_center / (track_width / 2))) * 0.2
         
         # Reward additional progress
         reward += (progress - (steps / STEPS_THRESHOLD)) * PROGRESS_FACTOR
 
-        if speed >= SPEEDING_THRESHOLD:
-            reward *= 1.5
 
-        if (-5.0 <= steering_angle <= 5.0) and (speed >= SPEEDING_THRESHOLD):
+        if (-4.0 <= steering_angle <= 4.0) and (speed >= SPEEDING_THRESHOLD):
             reward *= 2
 
-        # Give higher reward if the car is closer to center line and vice versa
-        if distance_from_center   <= 0.1 * track_width: reward *= 2
-        elif distance_from_center <= 0.25 * track_width: reward *= 1.25
-        elif distance_from_center <= 0.5 * track_width: reward *= 1.1
-        else: reward = 1e-3
-       
-    
+     
     return float(reward)
 
