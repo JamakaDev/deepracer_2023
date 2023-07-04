@@ -9,11 +9,19 @@
             "speed": 4.0
         },
         {
-            "steering_angle": -12.5,
+            "steering_angle": -16.5,
             "speed": 2.0
         },
         {
-            "steering_angle": -12.5,
+            "steering_angle": -16.5,
+            "speed": 4.0
+        },
+        {
+            "steering_angle": -8.5,
+            "speed": 2.0
+        },
+        {
+            "steering_angle": -8.5,
             "speed": 4.0
         },
         {
@@ -25,11 +33,19 @@
             "speed": 4.0
         },
         {
-            "steering_angle": 12.5,
+            "steering_angle": 8.5,
             "speed": 2.0
         },
         {
-            "steering_angle": 12.5,
+            "steering_angle": 8.5,
+            "speed": 4.0
+        },
+        {
+            "steering_angle": 16.5,
+            "speed": 2.0
+        },
+        {
+            "steering_angle": 16.5,
             "speed": 4.0
         },
         {
