@@ -4,6 +4,7 @@ def reward_function(params):
     
     all_wheels_on_track = params['all_wheels_on_track']
     car_direction = params['heading']
+    car_off_track = params['is_offtrack']
     closest_waypoints = params['closest_waypoints']
     distance_from_center = params['distance_from_center']
     progress = params['progress']
@@ -18,13 +19,13 @@ def reward_function(params):
     
     
     DIRECTION_THRESHOLD = 10.0
-    SPEEDING_THRESHOLD = 2.0
-    STEPS_THRESHOLD = 300 
-    PROGRESS_FACTOR = 1.2
+    SPEEDING_THRESHOLD = 2.25
+    STEPS_THRESHOLD = 250 
+    PROGRESS_FACTOR = 1.25
         
 
     # Penalize if the car goes off-track
-    if not all_wheels_on_track:
+    if not all_wheels_on_track or car_off_track:
         reward = 1e-3
     else:
         # Get direction of next waypoint
@@ -52,8 +53,22 @@ def reward_function(params):
         if speed >= SPEEDING_THRESHOLD:
             reward *= 1.5
 
-        if (-5.0 <= steering_angle <= 5.0) and (speed >= SPEEDING_THRESHOLD) and (distance_from_center <= track_width * .25):
+        if (-5.0 <= steering_angle <= 5.0) and (speed >= SPEEDING_THRESHOLD):
             reward *= 2
+
+	marker_1 = 0.1 * track_width
+        marker_2 = 0.25 * track_width
+        marker_3 = 0.5 * track_width
+        
+        # Give higher reward if the car is closer to center line and vice versa
+        if distance_from_center <= marker_1:
+            reward *= 2
+        elif distance_from_center <= marker_2:
+            reward *= 1.25
+        elif distance_from_center <= marker_3:
+            reward *= 1.1
+        else:
+            reward = 1e-3
 
         
     
