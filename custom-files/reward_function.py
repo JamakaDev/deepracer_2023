@@ -14,15 +14,16 @@ def reward_function(params):
     waypoints = params['waypoints']
     x_coord = params['x']
     y_coord = params['y']
-    reward = speed
-    
     marker_1 = 0.1 * track_width
     marker_2 = 0.25 * track_width
     marker_3 = 0.5 * track_width
     
-    DIRECTION_THRESHOLD = 15.0
-    SPEEDING_THRESHOLD = 2.2
-    STEPS_THRESHOLD = 300 
+    reward = speed
+    
+    
+    DIRECTION_THRESHOLD = 10.0
+    SPEEDING_THRESHOLD = 2.0
+    STEPS_THRESHOLD = 275 
     PROGRESS_FACTOR = 1.25
         
 
@@ -42,39 +43,34 @@ def reward_function(params):
     if direction_diff > 180:
         direction_diff -= 360
 
-    next_index = int((progress / 100) * (len(waypoints) - 1))
-    next_coord = waypoints[next_index]
-    track_direction = next_coord[0] - x_coord, next_coord[1] - y_coord
-    
-    # Get angle between the car direction and the track direction
-    direction_diff_x = abs(track_direction[0] - car_direction)
-    direction_diff_y = abs(track_direction[1] - car_direction)
-    
-    # Penalize if the car deviates from the track direction
-    if direction_diff_x > 1.0 or direction_diff_y > 1.0:
+    # Penalize the reward if the difference is too large
+    if direction_diff > DIRECTION_THRESHOLD:
         reward *= 0.5
-
+    
     # Reward if the car is closer to the center of the track
-    reward += (1 - (distance_from_center / (track_width / 2))) * 0.2
+    reward += (1 - (distance_from_center / (track_width / 2))) * 0.1
     
     # Reward additional progress
     reward += (progress - (steps / STEPS_THRESHOLD)) * PROGRESS_FACTOR
 
-    if (abs(steering_angle) <= 5.0) and (speed >= SPEEDING_THRESHOLD) and direction_diff < DIRECTION_THRESHOLD:
-        reward *= 2.5
+    if speed >= SPEEDING_THRESHOLD:
+        reward *= 1.5
+
+    if (abs(steering_angle) <= 5.0) and (speed >= SPEEDING_THRESHOLD):
+        reward *= 2
     
     if (marker_3 - distance_from_center) >= 0.05: 
-        reward *= 1.75
+        reward *= 2
     
     # Give higher reward if the car is closer to center line and vice versa
     if distance_from_center <= marker_1:
-        reward *= 2.25
+        reward *= 2
     elif distance_from_center <= marker_2:
-        reward *= 1.5
+        reward *= 1.25
     elif distance_from_center <= marker_3:
         reward *= 1.1
     else:
         reward = 1e-3
-
+     
     
     return float(reward)
