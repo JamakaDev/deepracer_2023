@@ -21,8 +21,8 @@ def reward_function(params):
     reward = speed
     
     
-    DIRECTION_THRESHOLD = 10.0
-    SPEEDING_THRESHOLD = 2.0
+    DIRECTION_THRESHOLD = 9.0
+    SPEEDING_THRESHOLD = 2.5
     STEPS_THRESHOLD = 275 
     PROGRESS_FACTOR = 1.25
         
