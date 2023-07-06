@@ -40,37 +40,28 @@ def reward_function(params):
 
     # Calculate the difference between the track direction and the heading direction of the car
     direction_diff = abs(track_direction - car_direction)
-    if direction_diff > 180:
-        direction_diff -= 360
+    if direction_diff > 180: direction_diff -= 360
 
     # Penalize the reward if the difference is too large
-    if direction_diff > DIRECTION_THRESHOLD:
-        reward *= 0.5
+    if direction_diff > DIRECTION_THRESHOLD: reward *= 0.5
+    else: reward *= 1.25
     
     # Reward if the car is closer to the center of the track
-    reward += (1 - (distance_from_center / (track_width / 2))) * 0.1
+    reward += (1 - (distance_from_center / (track_width / 2))) * 0.2
     
     # Reward additional progress
     reward += (progress - (steps / STEPS_THRESHOLD)) * PROGRESS_FACTOR
 
-    if speed >= SPEEDING_THRESHOLD:
-        reward *= 1.5
 
-    if (abs(steering_angle) <= 5.0) and (speed >= SPEEDING_THRESHOLD):
-        reward *= 2
+    if (abs(steering_angle) <= 5.0) and (speed >= SPEEDING_THRESHOLD): reward *= 2
     
-    if (marker_3 - distance_from_center) >= 0.05: 
-        reward *= 2
+    if (marker_3 - distance_from_center) >= 0.1: reward *= 2
     
     # Give higher reward if the car is closer to center line and vice versa
-    if distance_from_center <= marker_1:
-        reward *= 2
-    elif distance_from_center <= marker_2:
-        reward *= 1.25
-    elif distance_from_center <= marker_3:
-        reward *= 1.1
-    else:
-        reward = 1e-3
+    if distance_from_center <= marker_1: reward = reward * 3 if speed >= SPEEDING_THRESHOLD else reward * 2
+    elif distance_from_center <= marker_2: reward *= 1.5
+    elif distance_from_center <= marker_3: reward *= 1.1
+    else: reward = 1e-3
      
     
     return float(reward)
