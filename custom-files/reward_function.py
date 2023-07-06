@@ -22,6 +22,7 @@ def reward_function(params):
     DIRECTION_THRESHOLD = 10.0
     MAX_STEPS = 300 
     PROGRESS_FACTOR = 1.15
+    SPEED_THRESHOLD = 3.0
     
     # Penalize if the car goes off-track
     if not all_wheels_on_track and car_is_offtrack:
@@ -46,7 +47,7 @@ def reward_function(params):
     if direction_diff > 180: direction_diff = 360 - direction_diff
     
     # Penalize if the diff too large
-    if direction_diff > DIRECTION_THRESHOLD: reward *= 0.75
+    if direction_diff > DIRECTION_THRESHOLD: reward *= 0.5
     else: reward *= 1.25
     
     # Reward if the car is closer to the center of the track
@@ -54,5 +55,7 @@ def reward_function(params):
     
     # Reward additional progress
     reward += (progress - (steps / MAX_STEPS)) * PROGRESS_FACTOR
+    
+    if speed > SPEED_THRESHOLD and distance_from_center <= (track_width*.25): reward *= 2.5
     
     return float(reward)
