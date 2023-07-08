@@ -29,9 +29,9 @@ def reward_function(params):
         return 1e-3
 
     if distance_from_center <= marker_1:
-        reward *= 2
+        reward *= 2.5
     elif distance_from_center <= marker_2:
-        reward *= 1.5
+        reward *= 1.75
     elif distance_from_center <= marker_3:
         reward *= 1.25
     else:
@@ -51,11 +51,11 @@ def reward_function(params):
     else: reward *= 1.25
     
     # Reward if the car is closer to the center of the track
-    reward += (1 - (distance_from_center / (track_width / 2))) * 0.15
+    reward += (1 - (distance_from_center / (track_width / 2))) * 0.25
     
     # Reward additional progress
     reward += (progress - (steps / MAX_STEPS)) * PROGRESS_FACTOR
     
-    if speed > SPEED_THRESHOLD and distance_from_center <= (track_width*.25): reward *= 2.5
+    if speed > SPEED_THRESHOLD and distance_from_center <= (track_width*.25): reward *= 3.0
     
     return float(reward)
