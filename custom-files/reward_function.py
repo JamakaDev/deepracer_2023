@@ -20,7 +20,7 @@ def reward_function(params):
     reward = speed
 
     DIRECTION_THRESHOLD = 10.0
-    MAX_STEPS = 300 
+    MAX_STEPS = 250 
     PROGRESS_FACTOR = 1.15
     SPEED_THRESHOLD = 2.25
     
@@ -34,7 +34,6 @@ def reward_function(params):
     next_point = waypoints[params['closest_waypoints'][1]]
     track_direction = math.atan2(next_point[0] - x_coord, next_point[1] - y_coord)
     track_direction = math.degrees(track_direction)
-    
     direction_diff = abs(track_direction - car_direction)
     if direction_diff > 180: direction_diff = 360 - direction_diff
     
