@@ -2,9 +2,17 @@ def reward_function(params):
     
     all_wheels_on_track = params['all_wheels_on_track']
     car_is_offtrack = params['is_offtrack']
-    speed = params['speed']
-    next_step = params['closest_waypoints'][1]
-
+    reward = speed = params['speed']
+    track_width = params['track_width']
+    distance_from_center = params['distance_from_center']
+    marker_1 = 0.1 * track_width
+    marker_2 = 0.25 * track_width
+    marker_3 = 0.5 * track_width
+    
     if not all_wheels_on_track or car_is_offtrack: return 1e-4
-    if next_step in list(range(20, 40)) and speed > 2: return 1e-3
-    return float(speed)
+    if   distance_from_center <= marker_1: reward += 2
+    elif distance_from_center <= marker_2: reward += 1.5
+    elif distance_from_center <= marker_3: reward += 1.25
+    else: return 1e-3
+    
+    return float(reward)
