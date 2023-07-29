@@ -42,4 +42,4 @@ def reward_function(params):
 
     if not params["waypoints"][params["closest_waypoints"][1]] in list(range(20,105)) and params["speed"] > 3: reward += 100.0
 
-    return float(reward)
+    return float(reward) if reward > 0 else 1e-3
