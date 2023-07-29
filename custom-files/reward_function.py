@@ -58,5 +58,6 @@ def reward_function(params):
     elif distance_from_center <= marker_3: reward *= 1.1
     else: reward = 1e-3
      
-    
+    if not next_waypoint in list(range(20,105)) and speed > 3: reward * 10
+
     return float(reward)
