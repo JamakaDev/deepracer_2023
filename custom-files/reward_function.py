@@ -25,20 +25,21 @@ def reward_function(params):
     
     reward = 42.0
 
-    if params["all_wheels_on_track"]:
-        reward += 10.0
-    else:
-        reward -= 10.0
+    if params["all_wheels_on_track"] or not params["is_offtrack"] or not params["is_reversed"]: reward += 10.0
+    else: return 1e-4
 
     if params["closest_waypoints"][1] in left_lane and params["is_left_of_center"]: reward += 10.0
     elif params["closest_waypoints"][1] in center_lane and center_variance < 0.5: reward += 10.0
     else: reward -= 10.0
     
     if params["closest_waypoints"][1] in fast:
-        if params["speed"] >= 2 : reward += 10.0
+        if params["speed"] >= 3 : reward += 20.0
+        elif params["speed"] >= 2 : reward += 10.0
         else: reward -= 10.0
     elif params["closest_waypoints"][1] in slow:
         if params["speed"] <= 2 : reward += 10.0
         else: reward -= 10.0
-            
+
+    if not params["waypoints"][params["closest_waypoints"][1]] in list(range(20,105)) and params["speed"] > 3: reward += 100.0
+
     return float(reward)
